@@ -6,11 +6,20 @@ export const registerUser = async ({ userName, email, password, role }) => {
         const pool = await getConnection();
         const result = await pool.request()
             .input('userName', sql.VarChar(100), userName)
-            .input('email', sql.VarChar(100), email)
             .input('password', sql.VarChar(255), password)
-            .input('role', sql.VarChar(50), role)
-            .query('INSERT INTO users (userName, email, password, role) VALUES (@userName, @email, @password, @role)');
+            .query('INSERT INTO users (userName, password) VALUES (@userName, @password)');
         return result;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const fetchAllUsers = async () => {
+    try {
+        const pool = await getConnection();
+        const result = await pool.request()
+            .query('SELECT * FROM users');
+        return result.recordset;
     } catch (error) {
         throw error;
     }
